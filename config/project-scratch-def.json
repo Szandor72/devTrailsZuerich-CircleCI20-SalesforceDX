@@ -1,0 +1,9 @@
+{
+    "orgName": "MY Scratch Org",
+    "edition": "Developer",
+    "language": "en-US",
+    "country": "US",
+    "orgPreferences" : {
+        "enabled": ["S1DesktopEnabled"]
+    }
+}
