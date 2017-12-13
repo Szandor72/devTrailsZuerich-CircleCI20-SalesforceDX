@@ -9,7 +9,7 @@ In order to get Continuous Integration up and running, create a connected app, a
 
 Important: Do not use 'all user may self authorize'. Use Profiles or Permission Sets. 
 
-##Circle CI 
+## Circle CI 
 
 We will need to set up a few environment variables in Circle CI in order to securly store our credentials.
 
