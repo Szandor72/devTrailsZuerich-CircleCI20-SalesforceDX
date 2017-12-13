@@ -11,12 +11,12 @@ Important: Do not use 'all user may self authorize'. Use Profiles or Permission 
 
 ## Circle CI 
 
+Head over to https://circleci.com and sign up with your github account and add your new project/repo.
+
 We will need to set up a few environment variables in Circle CI in order to securly store our credentials.
 
 - First create a hex version of your server key (bash)
 '$ xxd -p server.key >> server.key.hex'
-
-Go to https://circleci.com, sign up with your github account and add your new project.    
 
 Now add the following environment vars at
  https://circleci.com/gh/$GithubUsername$/$RepositoryName$/edit#env-vars 

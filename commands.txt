@@ -68,6 +68,4 @@ sfdx force:source:pull
 cf readme of this repo
 cf .circleci/config.yml
 
-If you want to 
-
 
