@@ -40,7 +40,7 @@ https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_de
 - there's a setting you can use to specify oAuth port on `oauthLocalPort`
 https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm
 
-##DX Plugins to check out
+## DX Plugins to check out
 DX can be extended in various ways, here are my two current favourites
 
 - https://www.npmjs.com/package/sfdx-l18n-plugin
