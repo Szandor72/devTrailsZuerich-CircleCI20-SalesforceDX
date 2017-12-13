@@ -16,7 +16,9 @@ Head over to https://circleci.com and sign up with your github account and add y
 We will need to set up a few environment variables in Circle CI in order to securly store our credentials.
 
 - First create a hex version of your server key (bash)
-'$ xxd -p server.key >> server.key.hex'
+```
+$ xxd -p server.key >> server.key.hex'
+```
 
 Now add the following environment vars at
  https://circleci.com/gh/$GithubUsername$/$RepositoryName$/edit#env-vars 
