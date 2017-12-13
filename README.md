@@ -32,7 +32,7 @@ CircleCI 2.0 is pretty straigtht forward to read without any prior experience. T
 - authenticate dx with ALIAS `deploy`
 - add the following to your build:
   `sfdx force:source:convert -r force-app -d testDeploy`
-  `sfdx force:mdapi:deploy -d testDeploy/ -u deploy -w 2`
+  `sfdx force:mdapi:deploy -d testDeploy/ -u deploy --wait 2`
  
 ## Resources
 https://trailhead.salesforce.com/en/trails/sfdx_get_started
