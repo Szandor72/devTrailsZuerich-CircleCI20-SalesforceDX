@@ -25,8 +25,15 @@ Now add the following environment vars at
 - DX_CONSUMER_KEY: the connected app's consumer key
 - SSL_SERVER_KEY_HEX: the content of `server.key.hex`
 
-CircleCI 2.0 is pretty straigtht forward to read without any prior experience. That's a huge improvement in comparison to 1.0. Have a look at `.circleci/config.yml`
+CircleCI 2.0 is pretty straigtht forward to read without any prior experience. That's a huge improvement in comparison to 1.0. Have a look at `.circleci/config.yml`and for a general idea how to work with branch-level workflows: https://github.com/CircleCI-Public/circleci-demo-workflows/blob/sequential-branch-filter/.circleci/config.yml
 
+## Nice demo, how can I use this for real stuff?
+- create another connected app in your org (sandbox/production)
+- authenticate dx with ALIAS `deploy`
+- add the following to your build:
+  `sfdx force:source:convert -r force-app -d testDeploy`
+  `sfdx force:mdapi:deploy -d testDeploy/ -u deploy -w 2`
+ 
 ## Resources
 https://trailhead.salesforce.com/en/trails/sfdx_get_started
 https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_connected_app.htm
