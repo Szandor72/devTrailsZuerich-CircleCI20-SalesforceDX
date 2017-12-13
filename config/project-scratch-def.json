@@ -3,6 +3,7 @@
     "edition": "Developer",
     "language": "en-US",
     "country": "US",
+    "hasSampleData" : true,
     "orgPreferences" : {
         "enabled": ["S1DesktopEnabled"]
     }
