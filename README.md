@@ -31,9 +31,10 @@ CircleCI 2.0 is pretty straigtht forward to read without any prior experience. T
 - create another connected app in your org (sandbox/production)
 - authenticate dx with ALIAS `deploy`
 - add the following to your build:
-  `sfdx force:source:convert -r force-app -d testDeploy`
-  `sfdx force:mdapi:deploy -d testDeploy/ -u deploy --wait 2`
- 
+```
+  sfdx force:source:convert -r force-app -d testDeploy
+  sfdx force:mdapi:deploy -d testDeploy/ -u deploy --wait 2
+``` 
 ## Resources
 https://trailhead.salesforce.com/en/trails/sfdx_get_started
 https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_connected_app.htm
