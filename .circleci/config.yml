@@ -24,7 +24,6 @@ jobs:
       - run: 
           name: run apex tests
           command: |
-            mkdir -p $CIRCLE_TEST_REPORTS/junit
             sfdx force:apex:test:run -c -d $CIRCLE_TEST_REPORTS/junit -r junit
             sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
   
