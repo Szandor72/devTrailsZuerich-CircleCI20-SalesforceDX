@@ -24,6 +24,15 @@ jobs:
       - run: 
           name: run apex tests
           command: |
-            sfdx force:apex:test:run -c -d $CIRCLE_TEST_REPORTS/junit -r junit
-            sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
+            mkdir -p ~/apex
+            sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 0.5
+      - store_test_results:
+          path: ~/apex
+      - store_artifacts:
+          path: ~/apex   
+        
+      - run: 
+          name: delete scratch org
+          command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
+          when: always      
   
