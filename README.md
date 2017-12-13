@@ -32,14 +32,14 @@ CircleCI 2.0 is pretty straigtht forward to read without any prior experience. T
 - authenticate dx with ALIAS `deploy`
 - add the following to your build:
 ```
-  sfdx force:source:convert -r force-app -d testDeploy
-  sfdx force:mdapi:deploy -d testDeploy/ -u deploy --wait 2
+  sfdx force:source:convert -r force-app -d src
+  sfdx force:mdapi:deploy -d src/ -u deploy --wait 2
 ``` 
 ## Resources
-https://trailhead.salesforce.com/en/trails/sfdx_get_started
-https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_connected_app.htm
+- https://trailhead.salesforce.com/en/trails/sfdx_get_started
+- https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_connected_app.htm
 - there's a setting you can use to specify oAuth port on `oauthLocalPort`
-https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.htm
+- https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_key_and_cert.ht-= m
 
 ## DX Plugins to check out
 DX can be extended in various ways, here are my two current favourites
