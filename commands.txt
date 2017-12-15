@@ -10,7 +10,7 @@ git add -A
 git commit -m 'Initial Commit'
 
 #usually, I'd create new branch here - skipping. What's that cryptic W-? It's a WorkItem Number in Agile Accelerator
-git checkout -b feature/W-000123
+#git checkout -b feature/W-000123
 
 
 #converting my packaged metadata into dx format 
