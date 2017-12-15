@@ -63,6 +63,11 @@ sfdx force:source:pull
 #Try it out yourself
 #Have a look at the folder/file structure: so much easier to directly edit than classic metadata 
 
+#need to swap authentication with yourself on another computer? use an auth.json 
+force:auth:sfdxurl:store -f ./auth.json
+#auth.json contains only one single property: sfdxAuthUrl
+#copy that property from here:
+#sfdx force:org:display --verbose --json
 
 #Setup CI Magic!
 cf readme of this repo
