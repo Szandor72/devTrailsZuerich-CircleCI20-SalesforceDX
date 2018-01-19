@@ -1,10 +1,9 @@
 version: 2
 jobs:
-  build:
+  setup-dx-environment:
     docker:
        - image: ncino/ci-sfdx  
     steps:
-      - checkout
       - run: 
           name: Update DX if necessary
           command: |
@@ -16,47 +15,73 @@ jobs:
             mkdir tmp; echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> ./tmp/server.key;
             openssl rsa -in ./tmp/server.key -check -noout
       - run:
-          name: auth sfdx
+          name: check auth for all orgs invovled 
           command: |
             sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
       - persist_to_workspace:
           root: /tmp
           paths:
             - server.key
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      - run: 
-          name: create scratch org, push source
-          command: |
-            sfdx force:org:create -s -f config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM
-            sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
-      - run: 
-          name: run apex tests
-          command: |
-            mkdir -p ~/apex
-            sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2 # why does -1 not work here?
-      - store_test_results:
-          path: ~/apex
       - store_artifacts:
-          path: ~/apex   
-      - run: 
-          name: delete scratch org
-          command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
-          when: always
-  
+          path: ~/.sfdx/sfdx.log
+          destination: sfdx-logs      
+      
+      
+    push-and-test:
+        docker:
+            - image: ncino/ci-sfdx  
+        steps:
+            - checkout
+            - run: 
+                name: Update DX if necessary
+                command: |
+                    sfdx version
+                    sfdx plugins --core        
+             - run:
+                name: auth sfdx
+                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username sz@appero.com --setdefaultdevhubusername --setalias hub
+            - run: 
+                name: create scratch org, push source
+                command: |
+                    sfdx force:org:create -s -f config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM
+                    sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
+            - run: 
+                name: run apex tests
+                command: |
+                    mkdir -p ~/apex
+                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2
+            - store_test_results:
+                path: ~/apex
+            - store_artifacts:
+                  path: ~/.sfdx/sfdx.log
+                  destination: sfdx-logs   
+            - run: 
+                name: delete scratch org
+                command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
+                when: always
+      
+ workflows:
+  version: 2
+  run_build:
+    jobs:
+      - setup-dx-environment:
+          context: org-global
+          filters:
+            branches:
+              only:
+                - master   
+      - push-and-test:
+          context: org-global
+          requires:
+            - setup-dx-environment
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
