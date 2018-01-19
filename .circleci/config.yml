@@ -1,17 +1,10 @@
 version: 2
 jobs:
   build:
-    machine: true
-    #docker:
-    #    - image: ncino/ci-sfdx  
+    docker:
+       - image: ncino/ci-sfdx  
     steps:
       - checkout
-      - run:
-         name: Download DX
-         command: wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
-      - run:
-         name: Install DX
-         command: ./sfdx/install
       - run: 
           name: Update DX if necessary
           command: |
@@ -19,10 +12,16 @@ jobs:
             sfdx plugins --core   
       - run:
           name: create tmp dir and server key; check server key
-          command: mkdir tmp; echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> ./tmp/server.key; openssl rsa -in ./tmp/server.key -check -noout
+          command: |
+            mkdir tmp; echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> ./tmp/server.key;
+            openssl rsa -in ./tmp/server.key -check -noout
       - run:
           name: auth sfdx
-          command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username sz@appero.com --setdefaultdevhubusername --setalias hub
+          command: sfdx force:auth:jwt:grant 
+                                --clientid $DX_CONSUMER_KEY \
+                                --jwtkeyfile ./tmp/server.key \ 
+                                --username $DX_USER \
+                                --setdefaultdevhubusername --setalias hub
       - run: 
           name: create scratch org, push source
           command: |
