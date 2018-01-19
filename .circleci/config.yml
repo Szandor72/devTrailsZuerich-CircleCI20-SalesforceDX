@@ -31,7 +31,7 @@ jobs:
           name: run apex tests
           command: |
             mkdir -p ~/apex
-            sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait -1
+            sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 1 # why does -1 not work here?
       - store_test_results:
           path: ~/apex
       - store_artifacts:
