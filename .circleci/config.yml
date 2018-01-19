@@ -18,15 +18,11 @@ jobs:
       - run:
           name: auth sfdx
           command: |
-            sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY \
-                                --jwtkeyfile ./tmp/server.key \ 
-                                --username $DX_USER \
-                                --setdefaultdevhubusername --setalias hub
+            sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
       - persist_to_workspace:
-          root: /tmp/sfdx-keys
+          root: /tmp
           paths:
-            - dev-hub.key
-            - pkg-org.key
+            - server.key
       
       
       
