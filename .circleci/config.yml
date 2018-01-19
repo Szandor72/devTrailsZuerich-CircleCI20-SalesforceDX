@@ -6,12 +6,12 @@ jobs:
     #    - image: ncino/ci-sfdx  
     steps:
       - checkout
-      #- run:
-      #    name: Download DX
-      #    command: wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
-      #- run:
-      #    name: Install DX
-      #    command: ./sfdx/install
+      - run:
+         name: Download DX
+         command: wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
+      - run:
+         name: Install DX
+         command: ./sfdx/install
       - run: 
           name: Update DX if necessary
           command: |
