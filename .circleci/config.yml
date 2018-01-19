@@ -3,6 +3,7 @@ jobs:
   setup-build-environment:
         docker:
             - image: ncino/ci-sfdx
+  build:          
     steps:
       - checkout
       #- run:
