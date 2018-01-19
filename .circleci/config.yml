@@ -17,10 +17,34 @@ jobs:
             openssl rsa -in ./tmp/server.key -check -noout
       - run:
           name: auth sfdx
-          command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY \
+          command: |
+            sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY \
                                 --jwtkeyfile ./tmp/server.key \ 
                                 --username $DX_USER \
                                 --setdefaultdevhubusername --setalias hub
+      - persist_to_workspace:
+          root: /tmp/sfdx-keys
+          paths:
+            - dev-hub.key
+            - pkg-org.key
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       - run: 
           name: create scratch org, push source
           command: |
