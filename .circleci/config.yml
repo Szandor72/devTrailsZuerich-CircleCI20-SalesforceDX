@@ -1,8 +1,9 @@
 version: 2
 jobs:
   build:
-    docker:
-        - image: ncino/ci-sfdx  
+    machine: true
+    #docker:
+    #    - image: ncino/ci-sfdx  
     steps:
       - checkout
       #- run:
