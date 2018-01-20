@@ -27,7 +27,75 @@ jobs:
           destination: sfdx-logs      
       
       
-    push-and-test:
+    push-and-test-a-little:
+        docker:
+            - image: ncino/ci-sfdx  
+        steps:
+            - checkout
+            - run: 
+                name: Update DX if necessary
+                command: |
+                    sfdx version
+                    sfdx plugins --core        
+            - run:
+                name: auth sfdx
+                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+            - run: 
+                name: create scratch org, push source
+                command: |
+                    sfdx force:org:create -s -f config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM
+                    sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
+            - run: 
+                name: run apex tests
+                command: |
+                    mkdir -p ~/apex
+                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2
+            - store_test_results:
+                path: ~/apex
+            - store_artifacts:
+                  path: ~/.sfdx/sfdx.log
+                  destination: sfdx-logs   
+            - run: 
+                name: delete scratch org
+                command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
+                when: always
+
+    push-and-test-a-little:
+        docker:
+            - image: ncino/ci-sfdx  
+        steps:
+            - checkout
+            - run: 
+                name: Update DX if necessary
+                command: |
+                    sfdx version
+                    sfdx plugins --core        
+            - run:
+                name: auth sfdx
+                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+            - run: 
+                name: create scratch org, push source
+                command: |
+                    sfdx force:org:create -s -f config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM
+                    sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
+            - run: 
+                name: run apex tests
+                command: |
+                    mkdir -p ~/apex
+                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2 -n SObjectServiceTest.cls
+            - store_test_results:
+                path: ~/apex
+            - store_artifacts:
+                  path: ~/.sfdx/sfdx.log
+                  destination: sfdx-logs   
+            - run: 
+                name: delete scratch org
+                command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
+                when: always
+
+
+
+    push-and-test-a-little-more:
         docker:
             - image: ncino/ci-sfdx  
         steps:
@@ -49,7 +117,7 @@ jobs:
                 name: run apex tests
                 command: |
                     mkdir -p ~/apex
-                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2
+                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2 -n retrieveSObjectControllerTest
             - store_test_results:
                 path: ~/apex
             - store_artifacts:
@@ -58,8 +126,19 @@ jobs:
             - run: 
                 name: delete scratch org
                 command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
-                when: always
-      
+                when: always                            
+    
+    
+    finalize:
+        docker:
+            - image: ncino/ci-sfdx  
+        steps:
+            - run:
+                name: print final success statement
+                command: echo HOOORAY
+
+
+
 workflows:
   version: 2
   run_build:
@@ -70,11 +149,19 @@ workflows:
             branches:
               only:
                 - master   
-      - push-and-test:
+      - push-and-test-a-little:
           context: org-global
           requires:
             - setup-dx-environment
-
+      - push-and-test-a-little-more:
+          context: org-global
+          requires:
+            - setup-dx-environment
+      - finalize:
+            requires:
+                - setup-dx-environment
+                - push-and-test-a-little
+                - push-and-test-a-little-more
       
       
       
