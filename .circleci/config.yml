@@ -14,7 +14,7 @@ jobs:
           command: |
             mkdir /tmp/sfdx-keys 
             echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
-            openssl rsa -in /tmp/sfdx-keys/server.key/tmp/sfdx-keys/server.key -check -noout
+            openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
       - run:
           name: check auth for all orgs invovled 
           command: |
