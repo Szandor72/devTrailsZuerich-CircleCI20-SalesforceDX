@@ -32,6 +32,8 @@ jobs:
             - image: ncino/ci-sfdx  
         steps:
             - checkout
+            - attach_workspace:
+                at: /tmp/sfdx-keys
             - run: 
                 name: Update DX if necessary
                 command: |
@@ -39,7 +41,8 @@ jobs:
                     sfdx plugins --core        
             - run:
                 name: auth sfdx
-                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+                command: |
+                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
             - run: 
                 name: create scratch org, push source
                 command: |
@@ -65,6 +68,8 @@ jobs:
             - image: ncino/ci-sfdx  
         steps:
             - checkout
+            - attach_workspace:
+                at: /tmp/sfdx-keys
             - run: 
                 name: Update DX if necessary
                 command: |
@@ -72,7 +77,8 @@ jobs:
                     sfdx plugins --core        
             - run:
                 name: auth sfdx
-                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username sz@appero.com --setdefaultdevhubusername --setalias hub
+                command: |
+                    sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
             - run: 
                 name: create scratch org, push source
                 command: |
