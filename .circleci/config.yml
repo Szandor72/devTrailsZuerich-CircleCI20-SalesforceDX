@@ -19,7 +19,7 @@ jobs:
           command: |
             sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
       - persist_to_workspace:
-          root: /tmp
+          root: /tmp/
           paths:
             - server.key
       - store_artifacts:
