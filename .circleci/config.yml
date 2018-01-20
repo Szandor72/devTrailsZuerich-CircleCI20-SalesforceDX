@@ -1,31 +1,31 @@
 version: 2
 jobs:
-  setup-dx-environment:
-    docker:
-       - image: ncino/ci-sfdx  
-    steps:
-      - run: 
-          name: Update DX if necessary
-          command: |
-            sfdx version
-            sfdx plugins --core   
-      - run:
-          name: create tmp dir and server key; check server key
-          command: |
-            mkdir /tmp/sfdx-keys 
-            echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
-            openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
-      - run:
-          name: check auth for all orgs invovled 
-          command: |
-            sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
-      - persist_to_workspace:
-          root: /tmp/sfdx-keys
-          paths:
-            - server.key
-      - store_artifacts:
-          path: ~/.sfdx/sfdx.log
-          destination: sfdx-logs      
+    setup-dx-environment:
+        docker:
+        - image: ncino/ci-sfdx  
+        steps:
+        - run: 
+            name: Update DX if necessary
+            command: |
+                sfdx version
+                sfdx plugins --core   
+        - run:
+            name: create tmp dir and server key; check server key
+            command: |
+                mkdir /tmp/sfdx-keys 
+                echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
+                openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
+        - run:
+            name: check auth for all orgs invovled 
+            command: |
+                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+        - persist_to_workspace:
+            root: /tmp/sfdx-keys
+            paths:
+                - server.key
+        - store_artifacts:
+            path: ~/.sfdx/sfdx.log
+            destination: sfdx-logs      
 
     push-and-test-a-little:
         docker:
