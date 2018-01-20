@@ -60,9 +60,7 @@ jobs:
                 command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
                 when: always
 
-
-
-    push-and-test-a-little-more:
+    push-and-test-more:
         docker:
             - image: ncino/ci-sfdx  
         steps:
@@ -94,8 +92,7 @@ jobs:
                 name: delete scratch org
                 command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
                 when: always                            
-    
-    
+ 
     finalize:
         docker:
             - image: ncino/ci-sfdx  
@@ -120,7 +117,7 @@ workflows:
           context: org-global
           requires:
             - setup-dx-environment
-      - push-and-test-a-little-more:
+      - push-and-test-more:
           context: org-global
           requires:
             - setup-dx-environment
@@ -128,7 +125,7 @@ workflows:
             requires:
                 - setup-dx-environment
                 - push-and-test-a-little
-                - push-and-test-a-little-more
+                - push-and-test-more
       
       
       
