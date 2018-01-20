@@ -14,11 +14,11 @@ jobs:
           command: |
             mkdir /tmp/sfdx-keys 
             echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
-            openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
+            openssl rsa -in /tmp/sfdx-keys/server.key/tmp/sfdx-keys/server.key -check -noout
       - run:
           name: check auth for all orgs invovled 
           command: |
-            sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+            sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
       - persist_to_workspace:
           root: /tmp/sfdx-keys
           paths:
@@ -39,7 +39,7 @@ jobs:
                     sfdx plugins --core        
             - run:
                 name: auth sfdx
-                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ./tmp/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+                command: sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
             - run: 
                 name: create scratch org, push source
                 command: |
