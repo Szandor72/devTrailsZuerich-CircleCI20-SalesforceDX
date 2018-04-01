@@ -29,7 +29,7 @@ jobs:
             destination: sfdx-logs      
 
 
-    create-1st-feature-org:
+    create-1st-feature-org-and-run-tests:
         machine: true 
         steps: 
             - checkout
@@ -39,18 +39,17 @@ jobs:
                 name: DX Install
                 command: ~/tools/sfdx/install
             - run: 
-                name: Create feature Org  
+                name: Create 1st feature Org  
                 command: |
                     sfdx force:org:create --definitionfile ./config/project-scratch-def.json \
                             --setalias feature2 \
                             --durationdays 1
-            - persist_to_workspace:
-                root: ~/
-                paths:
-                    - tools/*
-                    - .sfdx/*
+                            sfdx force:source:push
+                            sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature2 --json >> ~/tools/ApexTests.json
+                            testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[0:length/2] | .[] .Name+","' --join-output)
+                            sfdx force:apex:test:run -n $testsToRun -u feature 2 -w 10
 
-    create-2nd-feature-org:
+    create-2nd-feature-org-and-run-tests:
         machine: true 
         steps: 
             - checkout
@@ -60,16 +59,16 @@ jobs:
                 name: DX Install
                 command: ~/tools/sfdx/install
             - run: 
-                name: Create feature Org  
+                name: Create 2nd feature Org and push source
                 command: |
                     sfdx force:org:create --definitionfile ./config/project-scratch-def.json \
                             --setalias feature2 \
                             --durationdays 1
-            - persist_to_workspace:
-                root: ~/
-                paths:
-                    - tools/*
-                    - .sfdx/*
+                    sfdx force:source:push
+                    sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature2 --json >> ~/tools/ApexTests.json
+                    testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[length/2:length] | .[] .Name+","' --join-output)
+                    sfdx force:apex:test:run -n $testsToRun -u feature 2 -w 10
+
 
     test-all:
         machine: true 
@@ -84,14 +83,11 @@ workflows:
   version: 2
   run_build:
     jobs:
-      - setup-dx-environment:
-          context: org-global
+      - setup-dx-environment
       - create-1st-feature-org:
-          context: org-global
           requires: 
                 - setup-dx-environment
       - create-2nd-feature-org:
-            context: org-global
             requires: 
                 - setup-dx-environment
       - test-all:
