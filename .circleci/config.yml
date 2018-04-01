@@ -7,8 +7,8 @@ jobs:
             name: Install DX (npm global)
             command: |
                 npm install salesforcedx --global
-                npm-do sfdx version
-                npm-do sfdx plugins --core   
+                npm run sfdx version
+                npm run sfdx plugins --core   
         - run:
             name: create tmp dir and server key; check server key
             command: |
@@ -18,7 +18,7 @@ jobs:
         - run:
             name: check auth for all orgs invovled 
             command: |
-                npm-do sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+                npm run sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - persist_to_workspace:
             root: /tmp/sfdx-keys
             paths:
