@@ -5,11 +5,10 @@ jobs:
         steps:
         - run:
             name: Download DX and install
-            command: | 
-                - npm install sfdx-cli
+            command: npm install sfdx-cli
         - run: 
             name: npm version
-            command: npm -v            
+            command: npm -v
         - run: 
             name: npx
             command: npx sfdx
