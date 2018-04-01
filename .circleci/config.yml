@@ -48,7 +48,7 @@ jobs:
                             sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature1 --json >> ~/tools/ApexTests.json
                             testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[0:length/2] | .[] .Name+","' --join-output)
                             echo Tests to run - $testsToRun
-                            sfdx force:apex:test:run -n SObjectServiceTest -u feature1 -w 10 
+                            sfdx force:apex:test:run -n SObjectServiceTest -u feature1 -w 10 -c -r human -d ~/test-results
             - store_test_results:
                 path: ~/test-results
             - store_artifacts:
@@ -76,15 +76,10 @@ jobs:
                             --durationdays 1
                     sfdx force:source:push -u feature2
             - run:
-                name: Query Tests 
+                name: Query Tests And Run Tests
                 command: |
                     sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature2 --json >> ~/tools/ApexTests.json
                     testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[length/2:length] | .[] .Name+","' --join-output)
-                    echo Tests To run - $testsToRun
-            - run:  
-                name: Run Tests
-                command: |        
-                    echo Tests To run2 - $testsToRun
                     sfdx force:apex:test:run -u feature2 -w 10 -n $testsToRun
             - store_test_results:
                 path: ~/test-results
