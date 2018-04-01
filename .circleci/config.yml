@@ -39,8 +39,7 @@ jobs:
                 command: ~/tools/sfdx/install
             - run: 
                 name: Create feature Org  
-                command: sfdx force:org:create \
-                            --definitionfile config/project-scratch-def.json \
+                command: sfdx force:org:create --definitionfile config/project-scratch-def.json \
                             --setalias feature1
             - persist_to_workspace:
                 root: ~/
@@ -58,8 +57,7 @@ jobs:
                 command: ~/tools/sfdx/install
             - run: 
                 name: Create feature Org  
-                command: sfdx force:org:create \
-                            --definitionfile config/project-scratch-def.json \
+                command: sfdx force:org:create --definitionfile config/project-scratch-def.json \
                             --setalias feature2
             - persist_to_workspace:
                 root: ~/
