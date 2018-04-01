@@ -48,9 +48,7 @@ jobs:
                             sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature1 --json >> ~/tools/ApexTests.json
                             testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[0:length/2] | .[] .Name+","' --join-output)
                             echo Tests to run - $testsToRun
-                            sfdx force:apex:test:run -n SObjectServiceTest \ 
-                                    -u feature1 \
-                                    --wait 10 \
+                            sfdx force:apex:test:run -n SObjectServiceTest -u feature1 -w 10 
             - store_test_results:
                 path: ~/test-results
             - store_artifacts:
