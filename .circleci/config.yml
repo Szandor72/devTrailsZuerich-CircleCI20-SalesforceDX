@@ -36,7 +36,7 @@ jobs:
         machine: true 
         steps: 
             - attach_workspace:
-                at: ~/tools/
+                at: ~/
             - run: 
                 name: ls
                 command: ls -a 
