@@ -1,12 +1,12 @@
 version: 2
 jobs:
-    setup-dx-environment:
-        docker:
-        - image: ncino/ci-sfdx  
+    setup-dx:
+        machine: true  
         steps:
         - run: 
-            name: Update DX if necessary
+            name: Install DX (npm global)
             command: |
+                npm install salesforcedx --global
                 sfdx version
                 sfdx plugins --core   
         - run:
@@ -28,8 +28,7 @@ jobs:
             destination: sfdx-logs      
 
     push-and-test-a-little:
-        docker:
-            - image: ncino/ci-sfdx  
+        machine: true  
         steps:
             - checkout
             - attach_workspace:
@@ -64,8 +63,7 @@ jobs:
                 when: always
 
     push-and-test-more:
-        docker:
-            - image: ncino/ci-sfdx  
+        machine: true
         steps:
             - checkout
             - attach_workspace:
@@ -100,8 +98,7 @@ jobs:
                 when: always                            
  
     finalize:
-        docker:
-            - image: ncino/ci-sfdx  
+        machine: true  
         steps:
             - run:
                 name: print final success statement
