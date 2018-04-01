@@ -21,7 +21,7 @@ jobs:
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ~/tools/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - run: 
             name: Create feature Org  
-            command: sfdx force:org:create --definitionfile ./config/project-scratch-def.json \
+            command: sfdx force:org:create -f ./config/project-scratch-def.json \
                         --setalias feature1 \
                         --durationdays 1
         - persist_to_workspace:
