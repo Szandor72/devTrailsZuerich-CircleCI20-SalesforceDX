@@ -93,4 +93,6 @@ workflows:
       - test-all:
             requires: 
                 - setup-dx-environment
+                - create-1st-feature-org
+                - create-2nd-feature-org
       
