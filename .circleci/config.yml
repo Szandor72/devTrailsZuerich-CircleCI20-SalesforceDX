@@ -23,10 +23,10 @@ jobs:
             name: just checking ls againnnn
             command: ls -a
         - persist_to_workspace:
-            root: ~/tools/
+            root: ~/
             paths:
-                - ./sfdx-keys/server.key
-                - sfdx/*
+                - tools/*
+                - .sfdx/*
         - store_artifacts:
             path: ~/.sfdx/sfdx.log
             destination: sfdx-logs      
