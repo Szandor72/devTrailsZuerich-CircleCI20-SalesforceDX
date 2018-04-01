@@ -39,7 +39,7 @@ jobs:
         machine: true 
         steps: 
             - attach_workspace:
-                at: /tools/
+                at: ~/tools/
             - restore_cache:
                     keys: 
                         - sfdx
