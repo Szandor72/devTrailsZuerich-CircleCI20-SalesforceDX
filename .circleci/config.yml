@@ -86,6 +86,7 @@ jobs:
             - run:  
                 name: Run Tests
                 command: |        
+                    echo Tests To run2 - $testsToRun
                     sfdx force:apex:test:run -u feature2 -w 10 -n $testsToRun
             - store_test_results:
                 path: ~/test-results
