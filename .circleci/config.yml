@@ -84,15 +84,15 @@ workflows:
   run_build:
     jobs:
       - setup-dx-environment
-      - create-1st-feature-org:
+      - create-1st-feature-org-and-run-tests:
           requires: 
                 - setup-dx-environment
-      - create-2nd-feature-org:
+      - create-2nd-feature-org-and-run-tests:
             requires: 
                 - setup-dx-environment
       - test-all:
             requires: 
                 - setup-dx-environment
-                - create-1st-feature-org
-                - create-2nd-feature-org
+                - create-1st-feature-org-and-run-tests
+                - create-2nd-feature-org-and-run-tests
       
