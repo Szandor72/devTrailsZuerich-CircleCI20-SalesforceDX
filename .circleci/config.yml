@@ -28,7 +28,7 @@ jobs:
             name: just checking ls againnnn
             command: ls -a
         - save_cache: 
-            key: sfdx
+            key: v1-sfdx
             paths: 
                 - /usr/local/bin/sfdx
                 - ./.sfdx
