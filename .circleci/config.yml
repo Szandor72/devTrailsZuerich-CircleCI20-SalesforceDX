@@ -29,7 +29,7 @@ jobs:
             destination: sfdx-logs      
 
 
-    create-1st-feature-org-and-run-tests:
+    feature-RunTestDistributed_1:
         machine: true 
         steps: 
             - checkout
@@ -50,7 +50,7 @@ jobs:
                 command: |
                     sfdx force:user:password:generate -u feature1
             - run:
-                name: Query Tests And Run Tests
+                name: Query Tests And Run 1st half of Tests
                 command: |
                     sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature1 --json >> ~/tools/ApexTests.json
                     testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[length/2:length] | .[] .Name+","' --join-output)
@@ -65,7 +65,7 @@ jobs:
                 destination: sfdx-logs
         
 
-    create-2nd-feature-org-and-run-tests:
+    feature-RunTestDistributed_2:
         machine: true 
         steps: 
             - checkout
@@ -86,7 +86,7 @@ jobs:
                 command: |
                     sfdx force:user:password:generate -u feature2
             - run:
-                name: Query Tests And Run Tests
+                name: Query Tests And Run 2nd half of Tests
                 command: |
                     sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature2 --json >> ~/tools/ApexTests.json
                     testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[length/2:length] | .[] .Name+","' --join-output)
@@ -100,7 +100,7 @@ jobs:
                 path: ~/.sfdx/sfdx.log
                 destination: sfdx-logs
 
-    test-all:
+    master-Deploy:
         machine: true 
         steps: 
             - attach_workspace:
@@ -117,15 +117,25 @@ workflows:
   feature_build:
     jobs:
       - setup-dx-environment
-      - create-1st-feature-org-and-run-tests:
+      - feature-RunTestDistributed_1:
           requires: 
                 - setup-dx-environment
-      - create-2nd-feature-org-and-run-tests:
+          filters:
+              branches:
+                  only:
+                  - /feature\/.*/
+      - feature-RunTestDistributed_2:
             requires: 
                 - setup-dx-environment
-      - test-all:
+            filters:
+                branches:
+                    only:
+                    - /feature\/.*/
+      - master-Deploy:
             requires: 
                 - setup-dx-environment
-                - create-1st-feature-org-and-run-tests
-                - create-2nd-feature-org-and-run-tests
-      
+            filters:
+                branches:
+                    only:
+                    - master
+          
