@@ -19,16 +19,16 @@ jobs:
                 printenv DX_CONSUMER_KEY
         - run: 
             name: just checking ls
-            command: ls 
+            command: ls -a
         - run:
             name: check auth for all orgs invovled 
             command: |
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - run: 
             name: just checking ls againnnn
-            command: ls 
+            command: ls -a
         - save_cache: 
-            key: sfdx-cli
+            key: sfdx
             paths: 
                 - /usr/local/bin/sfdx
                 - ./.sfdx
@@ -40,85 +40,24 @@ jobs:
             path: ~/.sfdx/sfdx.log
             destination: sfdx-logs      
 
-    push-and-test-a-little:
-        docker:
-            - image: ncino/ci-sfdx  
-        steps:
-            - checkout
-            - attach_workspace:
-                at: /tmp/sfdx-keys
-            - run: 
-                name: Update DX if necessary
-                command: |
-                    sfdx version
-                    sfdx plugins --core        
-            - run:
-                name: auth sfdx
-                command: |
-                    sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
-            - run: 
-                name: create scratch org, push source
-                command: |
-                    sfdx force:org:create -s -f config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM
-                    sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
-            - run: 
-                name: run apex tests
-                command: |
-                    mkdir -p ~/apex
-                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2 -n SObjectServiceTest
-            - store_test_results:
-                path: ~/apex
-            - store_artifacts:
-                  path: ~/.sfdx/sfdx.log
-                  destination: sfdx-logs   
-            - run: 
-                name: delete scratch org
-                command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
-                when: always
+        test-cache:
+            machine: true 
+            steps: 
+                - restore_cache:
+                        keys: sfdx
+                - run: 
+                    name: does dx work? 
+                    command: sfdx force:org:list
 
-    push-and-test-more:
-        docker:
-            - image: ncino/ci-sfdx  
-        steps:
-            - checkout
-            - attach_workspace:
-                at: /tmp/sfdx-keys
-            - run: 
-                name: Update DX if necessary
-                command: |
-                    sfdx version
-                    sfdx plugins --core        
-            - run:
-                name: auth sfdx
-                command: |
-                    sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
-            - run: 
-                name: create scratch org, push source
-                command: |
-                    sfdx force:org:create -s -f config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM
-                    sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
-            - run: 
-                name: run apex tests
-                command: |
-                    mkdir -p ~/apex
-                    sfdx force:apex:test:run -c -d ~/apex/ -r junit --wait 2 -n retrieveSObjectControllerTest
-            - store_test_results:
-                path: ~/apex
-            - store_artifacts:
-                  path: ~/.sfdx/sfdx.log
-                  destination: sfdx-logs   
-            - run: 
-                name: delete scratch org
-                command: sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
-                when: always                            
+                               
  
     finalize:
-        docker:
-            - image: ncino/ci-sfdx  
+        machine: true 
         steps:
             - run:
-                name: print final success statement
+                name: print final success statement => could be used to delete scratch orgs
                 command: echo HOOORAY
+                when: always
 
 
 
@@ -131,20 +70,11 @@ workflows:
           filters:
             branches:
               only:
-                - master   
-      - push-and-test-a-little:
+                - master
+      - test-cache:
           context: org-global
-          requires:
-            - setup-dx-environment
-      - push-and-test-more:
-          context: org-global
-          requires:
-            - setup-dx-environment
-      - finalize:
-            requires:
+          requires: 
                 - setup-dx-environment
-                - push-and-test-a-little
-                - push-and-test-more
       
       
       
