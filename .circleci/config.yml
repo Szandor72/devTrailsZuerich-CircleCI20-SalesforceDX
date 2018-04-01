@@ -6,28 +6,28 @@ jobs:
         - run:
             name: Download DX and store 
             command: |
-                mkdir /tools
-                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf - --directory /tools/
-                ./tools/sfdx/install
+                mkdir ~/tools
+                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf - --directory ~/tools/
+                ~/tools/sfdx/install
         - run:
             name: create tmp dir and server key; check server key
             command: |
-                mkdir /tools/sfdx-keys 
-                echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tools/sfdx-keys/server.key;
-                openssl rsa -in /tools/sfdx-keys/server.key -check -noout
+                mkdir ~/tools/sfdx-keys 
+                echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> ~/tools/sfdx-keys/server.key;
+                openssl rsa -in ~/tools/sfdx-keys/server.key -check -noout
         - run:
             name: check auth for dev hub
             command: |
-                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tools/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ~/tools/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - run: 
             name: just checking ls againnnn
             command: ls -a
         - save_cache: 
-            key: v1-sfdx
+            key: sfdx
             paths: 
-                - ./.sfdx
+                - ~/.sfdx
         - persist_to_workspace:
-            root: /tmp/sfdx-keys
+            root: ~/tools/sfdx-keys
             paths:
                 - server.key
         - store_artifacts:
