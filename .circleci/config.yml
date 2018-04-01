@@ -7,7 +7,12 @@ jobs:
             name: Download DX and install
             command: | 
                 - npm install sfdx-cli
-                - npx sfdx
+        - run: 
+            name: npm version
+            command: npm -v            
+        - run: 
+            name: npx
+            command: npx sfdx
         - run:
             name: create tmp dir and server key; check server key
             command: |
