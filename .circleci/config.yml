@@ -23,7 +23,7 @@ jobs:
             name: just checking ls againnnn
             command: ls -a
         - save_cache: 
-            key: sfdx
+            key: v1-sfdx
             paths: 
                 - ~/.sfdx
         - persist_to_workspace:
@@ -42,10 +42,10 @@ jobs:
                 at: ~/tools/
             - restore_cache:
                     keys: 
-                        - sfdx
+                        - v1-sfdx
             - run: 
                 name: DX Install
-                command: ./tools/sfdx/install
+                command: ~/tools/sfdx/install
             - run: 
                 name: does dx work? 
                 command: sfdx force:org:list
