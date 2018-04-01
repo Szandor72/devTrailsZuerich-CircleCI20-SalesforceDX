@@ -5,9 +5,7 @@ jobs:
         steps:
         - run:
             name: Download DX and install
-            command: |
-                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
-                ./sfdx/install
+            command: npm install sfdx-cli
         - run:
             name: create tmp dir and server key; check server key
             command: |
