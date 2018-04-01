@@ -25,7 +25,7 @@ jobs:
             command: |
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - run: 
-            name: just checking ls again
+            name: just checking ls againnnn
             command: ls 
         - save_cache: 
             key: sfdx-cli
