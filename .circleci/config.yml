@@ -40,17 +40,21 @@ jobs:
             path: ~/.sfdx/sfdx.log
             destination: sfdx-logs      
 
-        test-cache:
-            machine: true 
-            steps: 
-                - restore_cache:
-                        keys: sfdx
-                - run: 
-                    name: does dx work? 
-                    command: sfdx force:org:list
 
-                               
- 
+    test-cache:
+        machine: true 
+        steps: 
+            - restore_cache:
+                    keys: 
+                        - sfdx
+            - run: 
+                name: does dx work? 
+                command: sfdx force:org:list
+            - run: 
+                name: just checking ls againnnn
+                command: ls -a
+
+
     finalize:
         machine: true 
         steps:
