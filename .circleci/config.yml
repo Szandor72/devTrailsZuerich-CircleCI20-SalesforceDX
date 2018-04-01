@@ -51,7 +51,7 @@ jobs:
                             sfdx force:apex:test:run -n $testsToRun \ 
                                     -u feature1 \
                                     --wait 10 \
-                                    --codecoverage 
+                                    --codecoverage \
                                     -d ~/test-results/feature
             - store_test_results:
                 path: ~/test-results
@@ -85,7 +85,7 @@ jobs:
                     sfdx force:apex:test:run -n $testsToRun \ 
                             -u feature2 \
                             --wait 10 \
-                            --codecoverage 
+                            --codecoverage \
                             -d ~/test-results/feature
             - store_test_results:
                 path: ~/test-results
