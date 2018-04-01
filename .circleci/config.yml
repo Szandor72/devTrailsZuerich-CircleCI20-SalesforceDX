@@ -6,7 +6,6 @@ jobs:
         - run:
             name: Download DX and install
             command: |
-                mkdir /tmp/tools
                 wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
                 ./sfdx/install
         - run:
@@ -15,13 +14,16 @@ jobs:
                 mkdir /tmp/sfdx-keys 
                 echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
                 openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
+                cat /tmp/sfdx-keys/server.key
+                $DX_USER
+                $DX_CONSUMER_KEY
+        - run: 
+            name: just checking ls
+            command: ls 
         - run:
             name: check auth for all orgs invovled 
             command: |
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
-        - run: 
-            name: just checking ls
-            command: ls 
         - save_cache: 
             key: sfdx-cli
             paths: 
