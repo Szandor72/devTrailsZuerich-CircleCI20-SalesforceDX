@@ -47,7 +47,6 @@ jobs:
                             sfdx force:source:push -u feature1
                             sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature1 --json >> ~/tools/ApexTests.json
                             testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[0:length/2] | .[] .Name+","' --join-output)
-                            echo Tests to run - $testsToRun
                             sfdx force:apex:test:run -n $testsToRun \ 
                                     -u feature1 \
                                     --wait 10 \
@@ -79,7 +78,6 @@ jobs:
                     sfdx force:source:push -u feature2
                     sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature2 --json >> ~/tools/ApexTests.json
                     testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[length/2:length] | .[] .Name+","' --join-output)
-                    echo Tests to run - $testsToRun
                     sfdx force:apex:test:run -n $testsToRun \ 
                             -u feature2 \
                             --wait 10 \ 
@@ -107,7 +105,7 @@ jobs:
 
 workflows:
   version: 2
-  run_build:
+  feature_build:
     jobs:
       - setup-dx-environment
       - create-1st-feature-org-and-run-tests:
