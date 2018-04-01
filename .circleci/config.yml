@@ -15,8 +15,8 @@ jobs:
                 echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
                 openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
                 cat /tmp/sfdx-keys/server.key
-                $DX_USER
-                $DX_CONSUMER_KEY
+                printenv DX_USER
+                printenv DX_CONSUMER_KEY
         - run: 
             name: just checking ls
             command: ls 
