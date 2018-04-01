@@ -4,37 +4,27 @@ jobs:
         machine: true 
         steps:
         - run:
-            name: Download DX and install
-            command: npm install sfdx-cli
-        - run: 
-            name: npm version
-            command: npm -v
-        - run: 
-            name: npx
-            command: npx sfdx
+            name: Download DX and store 
+            command: |
+                mkdir /tools
+                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf - --directory /tools/
+                ./tools/sfdx/install
         - run:
             name: create tmp dir and server key; check server key
             command: |
-                mkdir /tmp/sfdx-keys 
-                echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
-                openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
-                cat /tmp/sfdx-keys/server.key
-                printenv DX_USER
-                printenv DX_CONSUMER_KEY
-        - run: 
-            name: just checking ls
-            command: ls -a
+                mkdir /tools/sfdx-keys 
+                echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tools/sfdx-keys/server.key;
+                openssl rsa -in /tools/sfdx-keys/server.key -check -noout
         - run:
-            name: check auth for all orgs invovled 
+            name: check auth for dev hub
             command: |
-                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tools/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - run: 
             name: just checking ls againnnn
             command: ls -a
         - save_cache: 
             key: v1-sfdx
             paths: 
-                - ./node_modules
                 - ./.sfdx
         - persist_to_workspace:
             root: /tmp/sfdx-keys
@@ -48,9 +38,14 @@ jobs:
     test-cache:
         machine: true 
         steps: 
+            - attach_workspace:
+                at: /tools/
             - restore_cache:
                     keys: 
                         - sfdx
+            - run: 
+                name: DX Install
+                command: ./tools/sfdx/install
             - run: 
                 name: does dx work? 
                 command: sfdx force:org:list
