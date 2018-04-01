@@ -23,7 +23,7 @@ jobs:
             name: just checking ls againnnn
             command: ls -a
         - save_cache: 
-            key: v1-sfdx
+            key: v2-sfdx
             paths: 
                 - ~/.sfdx
         - persist_to_workspace:
@@ -42,7 +42,7 @@ jobs:
                 at: ~/tools/
             - restore_cache:
                     keys: 
-                        - v1-sfdx
+                        - v2-sfdx
             - run: 
                 name: DX Install
                 command: ~/tools/sfdx/install
