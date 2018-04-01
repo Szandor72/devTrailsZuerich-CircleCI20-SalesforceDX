@@ -114,7 +114,7 @@ jobs:
 
 workflows:
   version: 2
-  feature_build:
+  salesforcedx:
     jobs:
       - setup-dx-environment
       - feature-RunTestDistributed_1:
