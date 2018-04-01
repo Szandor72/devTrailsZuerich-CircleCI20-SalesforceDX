@@ -5,7 +5,9 @@ jobs:
         steps:
         - run:
             name: Download DX and install
-            command: npm install sfdx-cli
+            command: | 
+                - npm install sfdx-cli
+                - npx sfdx
         - run:
             name: create tmp dir and server key; check server key
             command: |
@@ -28,7 +30,7 @@ jobs:
         - save_cache: 
             key: v1-sfdx
             paths: 
-                - /usr/local/bin/sfdx
+                - ./node_modules
                 - ./.sfdx
         - persist_to_workspace:
             root: /tmp/sfdx-keys
