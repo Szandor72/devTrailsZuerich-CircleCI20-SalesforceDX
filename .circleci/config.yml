@@ -1,23 +1,24 @@
 version: 2
 jobs:
-    setup-dx:
-        machine: true  
+    setup-dx-environment:
+        machine: true 
         steps:
-        - run: 
-            name: Install DX (npm global)
+        - run:
+            name: Download DX and install
             command: |
-                npm install salesforcedx --global
+                mkdir /tmp/tools
+                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
+                ./sfdx/install
         - run:
             name: create tmp dir and server key; check server key
             command: |
-                sfdx version
                 mkdir /tmp/sfdx-keys 
                 echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
                 openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
         - run:
             name: check auth for all orgs invovled 
             command: |
-                npm run sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+                sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
         - persist_to_workspace:
             root: /tmp/sfdx-keys
             paths:
@@ -27,7 +28,8 @@ jobs:
             destination: sfdx-logs      
 
     push-and-test-a-little:
-        machine: true  
+        docker:
+            - image: ncino/ci-sfdx  
         steps:
             - checkout
             - attach_workspace:
@@ -62,7 +64,8 @@ jobs:
                 when: always
 
     push-and-test-more:
-        machine: true
+        docker:
+            - image: ncino/ci-sfdx  
         steps:
             - checkout
             - attach_workspace:
@@ -97,11 +100,12 @@ jobs:
                 when: always                            
  
     finalize:
-        machine: true  
+        docker:
+            - image: ncino/ci-sfdx  
         steps:
             - run:
                 name: print final success statement
-                command: echo HOOOORAY
+                command: echo HOOORAY
 
 
 
@@ -109,7 +113,7 @@ workflows:
   version: 2
   run_build:
     jobs:
-      - setup-dx:
+      - setup-dx-environment:
           context: org-global
           filters:
             branches:
@@ -118,14 +122,14 @@ workflows:
       - push-and-test-a-little:
           context: org-global
           requires:
-            - setup-dx
+            - setup-dx-environment
       - push-and-test-more:
           context: org-global
           requires:
-            - setup-dx
+            - setup-dx-environment
       - finalize:
             requires:
-                - setup-dx
+                - setup-dx-environment
                 - push-and-test-a-little
                 - push-and-test-more
       
