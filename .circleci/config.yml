@@ -7,11 +7,10 @@ jobs:
             name: Install DX (npm global)
             command: |
                 npm install salesforcedx --global
-                npm run sfdx version
-                npm run sfdx plugins --core   
         - run:
             name: create tmp dir and server key; check server key
             command: |
+                sfdx version
                 mkdir /tmp/sfdx-keys 
                 echo $SSL_SERVER_KEY_HEX | xxd -r -ps >> /tmp/sfdx-keys/server.key;
                 openssl rsa -in /tmp/sfdx-keys/server.key -check -noout
