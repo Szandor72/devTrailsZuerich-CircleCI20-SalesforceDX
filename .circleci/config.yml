@@ -19,9 +19,6 @@ jobs:
             name: check auth for dev hub
             command: |
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ~/tools/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
-        - run: 
-            name: just checking ls againnnn
-            command: ls -a
         - persist_to_workspace:
             root: ~/
             paths:
@@ -32,34 +29,52 @@ jobs:
             destination: sfdx-logs      
 
 
-    test-cache:
+    create-1st-feature-org:
         machine: true 
         steps: 
             - attach_workspace:
                 at: ~/
             - run: 
-                name: ls
-                command: ls -a 
+                name: DX Install
+                command: ~/tools/sfdx/install
+            - run: 
+                name: Create feature Org  
+                command: sfdx force:org:create \
+                            --definitionfile config/project-scratch-def.json \
+                            --setalias feature1
+            - persist_to_workspace:
+                root: ~/
+                paths:
+                    - tools/*
+                    - .sfdx/*
+
+    create-2nd-feature-org:
+        machine: true 
+        steps: 
+            - attach_workspace:
+                at: ~/
             - run: 
                 name: DX Install
                 command: ~/tools/sfdx/install
             - run: 
-                name: does dx work? 
-                command: sfdx force:org:list
-            - run: 
-                name: just checking ls againnnn
-                command: ls -a
+                name: Create feature Org  
+                command: sfdx force:org:create \
+                            --definitionfile config/project-scratch-def.json \
+                            --setalias feature2
+            - persist_to_workspace:
+                root: ~/
+                paths:
+                    - tools/*
+                    - .sfdx/*
 
-
-    finalize:
+    test-all:
         machine: true 
-        steps:
-            - run:
-                name: print final success statement => could be used to delete scratch orgs
-                command: echo HOOORAY
-                when: always
-
-
+        steps: 
+            - attach_workspace:
+                at: ~/
+            - run: 
+                name: Check
+                command: sfdx force:org:display
 
 workflows:
   version: 2
@@ -67,21 +82,15 @@ workflows:
     jobs:
       - setup-dx-environment:
           context: org-global
-          filters:
-            branches:
-              only:
-                - master
-      - test-cache:
+      - create-1st-feature-org:
           context: org-global
           requires: 
                 - setup-dx-environment
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      - create-2nd-feature-org:
+            context: org-global
+            requires: 
+                - setup-dx-environment
+      - test-all:
+            requires: 
+                - setup-dx-environment
       
