@@ -119,14 +119,14 @@ workflows:
       - push-and-test-a-little:
           context: org-global
           requires:
-            - setup-dx-environment
+            - setup-dx
       - push-and-test-more:
           context: org-global
           requires:
-            - setup-dx-environment
+            - setup-dx
       - finalize:
             requires:
-                - setup-dx-environment
+                - setup-dx
                 - push-and-test-a-little
                 - push-and-test-more
       
