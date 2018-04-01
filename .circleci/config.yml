@@ -24,6 +24,9 @@ jobs:
             name: check auth for all orgs invovled 
             command: |
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile /tmp/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+        - run: 
+            name: just checking ls again
+            command: ls 
         - save_cache: 
             key: sfdx-cli
             paths: 
