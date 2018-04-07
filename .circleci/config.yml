@@ -105,6 +105,46 @@ jobs:
                 path: ~/.sfdx/sfdx.log
                 destination: sfdx-logs
 
+    master-convert-and-modify-source:
+        machine: true
+        steps: 
+            - attach_workspace:
+                at: ~/
+            - checkout  
+            - run: 
+                name: Install DX 
+                command: |
+                   ~/tools/sfdx/install   
+            - run: 
+                name: convert source to mdapi format and store
+                command: |
+                  mkdir ~/tools/src
+                  sfdx force:source:convert -d ~/tools/src
+            - run:
+                name: remove user permissions from admin profile if present
+                command: |
+                  test -f ~/tools/src/profiles/Admin.profile || \
+                  sed -i '/<userPermissions>/,/<\/userPermissions>/d' ~/tools/src/profiles/Admin.profile
+            - persist_to_workspace:
+                root: ~/
+                paths:
+                  - tools/*
+            - store_artifacts:
+                path: ~/.sfdx/sfdx.log
+                destination: sfdx-logs
+
+    master-Deploy-checkonly:
+        machine: true 
+        steps: 
+            - attach_workspace:
+                at: ~/
+            - run: 
+                name: DX Install
+                command: ~/tools/sfdx/install
+            - run: 
+                name: display
+                command: sfdx force:mdapi:deploy -d ~/tools/src -c -u production -r RunLocalTests -w -1
+
     master-Deploy:
         machine: true 
         steps: 
@@ -115,10 +155,7 @@ jobs:
                 command: ~/tools/sfdx/install
             - run: 
                 name: display
-                command: sfdx force:org:display -u production
-            - run: 
-                name: Check
-                command: sfdx force:org:list
+                command: sfdx force:mdapi:deploy -d ~/tools/src -u production -r NoTestRun -w -1
 
 workflows:
   version: 2
@@ -139,11 +176,25 @@ workflows:
                 branches:
                     only:
                     - /feature\/.*/
-      - master-Deploy:
+      - master-convert-and-modify-source:
             requires: 
                 - setup-dx-environment
             filters:
                 branches:
                     only:
                     - master
-          
+      - master-Deploy-checkonly:
+            requires: 
+                - master-convert-and-modify-source
+            filters:
+                branches:
+                    only:
+                    - master
+      - master-Deploy-checkonly:
+            requires: 
+                - master-Deploy-checkonly
+            filters:
+                branches:
+                    only:
+                    - master                    
+            
