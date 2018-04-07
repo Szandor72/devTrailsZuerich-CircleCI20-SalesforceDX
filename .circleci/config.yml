@@ -190,7 +190,7 @@ workflows:
                 branches:
                     only:
                     - master
-      - master-Deploy-checkonly:
+      - master-Deploy:
             requires: 
                 - master-Deploy-checkonly
             filters:
