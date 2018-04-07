@@ -22,8 +22,8 @@ jobs:
         - run: 
             name: check auth for production
             command: |
-                echo $PRODUCTION >> ./tools/production.auth
-                sfdx force:auth:sfdxurl:store -f ./tools/production.auth
+                echo $PRODUCTION >> ~/tools/production.auth
+                sfdx force:auth:sfdxurl:store -f ~/tools/production.auth
         - persist_to_workspace:
             root: ~/
             paths:
