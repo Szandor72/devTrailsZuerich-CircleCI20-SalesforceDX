@@ -19,6 +19,11 @@ jobs:
             name: check auth for dev hub
             command: |
                 sfdx force:auth:jwt:grant --clientid $DX_CONSUMER_KEY --jwtkeyfile ~/tools/sfdx-keys/server.key --username $DX_USER --setdefaultdevhubusername --setalias hub
+        - run: 
+            name: check auth for production
+            command: |
+                echo $PRODUCTION >> ./tools/production.auth
+                sfdx force:auth:sfdxurl:store -f ./tooling/production.auth
         - persist_to_workspace:
             root: ~/
             paths:
@@ -53,7 +58,7 @@ jobs:
                 name: Query Tests And Run 1st half of Tests
                 command: |
                     sfdx force:data:soql:query -q "select Name from apexclass where name like '%Test'" -u feature1 --json >> ~/tools/ApexTests.json
-                    testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[length/2:length] | .[] .Name+","' --join-output)
+                    testsToRun=$(cat ~/tools/ApexTests.json | jq -r '.result.records[0:length/2] | .[] .Name+","' --join-output)
                     sfdx force:apex:test:run -u feature1 -w 10 -c -r human -d ~/test-results -n $testsToRun
             - store_test_results:
                 path: ~/test-results
