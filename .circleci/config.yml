@@ -23,7 +23,7 @@ jobs:
             name: check auth for production
             command: |
                 echo $PRODUCTION >> ~/tools/production.auth
-                sfdx force:auth:sfdxurl:store -f ~/tools/production.auth
+                sfdx force:auth:sfdxurl:store -f ~/tools/production.auth -a production
         - persist_to_workspace:
             root: ~/
             paths:
@@ -113,6 +113,9 @@ jobs:
             - run: 
                 name: DX Install
                 command: ~/tools/sfdx/install
+            - run: 
+                name: display
+                command: sfdx:force:org:display -u production
             - run: 
                 name: Check
                 command: sfdx force:org:list
