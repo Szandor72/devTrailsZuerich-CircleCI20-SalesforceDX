@@ -115,7 +115,7 @@ jobs:
                 command: ~/tools/sfdx/install
             - run: 
                 name: display
-                command: sfdx:force:org:display -u production
+                command: sfdx force:org:display -u production
             - run: 
                 name: Check
                 command: sfdx force:org:list
