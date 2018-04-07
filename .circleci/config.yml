@@ -142,7 +142,7 @@ jobs:
                 name: DX Install
                 command: ~/tools/sfdx/install
             - run: 
-                name: display
+                name: do a check only deployment with tests running
                 command: sfdx force:mdapi:deploy -d ~/tools/src -c -u production -r RunLocalTests -w -1
 
     master-Deploy:
@@ -154,7 +154,7 @@ jobs:
                 name: DX Install
                 command: ~/tools/sfdx/install
             - run: 
-                name: display
+                name: deploy src
                 command: sfdx force:mdapi:deploy -d ~/tools/src -u production -r NoTestRun -w -1
 
 workflows:
