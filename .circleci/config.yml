@@ -142,7 +142,7 @@ jobs:
                 command: ~/tools/sfdx/install
             - run: 
                 name: do a check only deployment with tests running
-                command: sfdx force:mdapi:deploy -d ~/tools/src -c -u production -r RunLocalTests -w -1
+                command: sfdx force:mdapi:deploy -d ~/tools/src -c -u production -l RunSpecifiedTests -r RunLocalTests -w -1 
 
     master-Deploy:
         machine: true 
@@ -154,7 +154,7 @@ jobs:
                 command: ~/tools/sfdx/install
             - run: 
                 name: deploy src
-                command: sfdx force:mdapi:deploy -d ~/tools/src -u production -r NoTestRun -w -1
+                command: sfdx force:mdapi:deploy -d ~/tools/src -u production -l RunSpecifiedTests -r NoTestRun -w -1
 
 workflows:
   version: 2
