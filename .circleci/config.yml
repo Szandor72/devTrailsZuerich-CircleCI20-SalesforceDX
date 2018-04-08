@@ -31,7 +31,7 @@ jobs:
                 - .sfdx/*
         - store_artifacts:
             path: ~/.sfdx/sfdx.log
-            destination: sfdx-logs      
+            destination: sfdx-logs
 
 
     feature-RunTestDistributed_1:
