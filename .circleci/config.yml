@@ -24,10 +24,6 @@ jobs:
             command: |
                 echo $PRODUCTION >> ~/tools/production.auth
                 sfdx force:auth:sfdxurl:store -f ~/tools/production.auth -a production
-        - save_cache: 
-            key: v5-sfdx
-            paths: 
-                - ./node_modules
         - persist_to_workspace:
             root: ~/
             paths:
@@ -125,9 +121,10 @@ jobs:
             - attach_workspace:
                 at: ~/
             - checkout  
-            - restore_cache:
-                keys: 
-                    - v5-sfdx   
+            - run: 
+                name: Install DX 
+                command: |
+                   ~/tools/sfdx/install   
             - run: 
                 name: convert source to mdapi format and store
                 command: |
@@ -148,11 +145,11 @@ jobs:
     master-Deploy-checkonly:
         machine: true 
         steps: 
-            - restore_cache:
-                keys: 
-                    - v5-sfdx
             - attach_workspace:
                 at: ~/
+            - run: 
+                name: DX Install
+                command: ~/tools/sfdx/install
             - run: 
                 name: do a check only deployment with tests running
                 command: |
@@ -165,11 +162,11 @@ jobs:
     master-Deploy:
         machine: true 
         steps: 
-            - restore_cache:
-                keys: 
-                    - v5-sfdx
             - attach_workspace:
                 at: ~/
+            - run: 
+                name: DX Install
+                command: ~/tools/sfdx/install
             - run: 
                 name: deploy src
                 command: |
