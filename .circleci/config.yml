@@ -7,7 +7,8 @@ jobs:
             name: Download DX and store 
             command: |
                 mkdir ~/tools
-                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-cli/channels/stable/sfdx-cli-linux-x64.tar.xz | tar xJf - --directory ~/tools/
+                wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-cli/channels/stable/sfdx-cli-linux-x64.tar.xz --show-progress | tar xJf - --directory ~/tools/
+                ls ~/tools
                 ~/tools/sfdx/install
         - run:
             name: create tmp dir and server key; check server key
