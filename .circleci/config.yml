@@ -25,7 +25,7 @@ jobs:
                 echo $PRODUCTION >> ~/tools/production.auth
                 sfdx force:auth:sfdxurl:store -f ~/tools/production.auth -a production
         - save_cache: 
-            key: v1-sfdx
+            key: v5-sfdx
             paths: 
                 - ./node_modules
         - persist_to_workspace:
@@ -127,7 +127,7 @@ jobs:
             - checkout  
             - restore_cache:
                 keys: 
-                    - sfdx   
+                    - v5-sfdx   
             - run: 
                 name: convert source to mdapi format and store
                 command: |
@@ -150,7 +150,7 @@ jobs:
         steps: 
             - restore_cache:
                 keys: 
-                    - sfdx
+                    - v5-sfdx
             - attach_workspace:
                 at: ~/
             - run: 
@@ -167,7 +167,7 @@ jobs:
         steps: 
             - restore_cache:
                 keys: 
-                    - sfdx
+                    - v5-sfdx
             - attach_workspace:
                 at: ~/
             - run: 
