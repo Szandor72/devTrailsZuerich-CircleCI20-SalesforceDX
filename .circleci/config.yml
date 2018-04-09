@@ -35,7 +35,7 @@ jobs:
             destination: sfdx-logs
 
 
-    feature-RunTestDistributed_1:
+    feature-RunTestsDistributed_1:
         machine: true 
         steps: 
             - checkout
@@ -76,7 +76,7 @@ jobs:
                 destination: sfdx-logs
         
 
-    feature-RunTestDistributed_2:
+    feature-RunTestsDistributed_2:
         machine: true 
         steps: 
             - checkout
@@ -194,14 +194,14 @@ workflows:
   salesforcedx:
     jobs:
       - setup-dx-environment
-      - feature-RunTestDistributed_1:
+      - feature-RunTestsDistributed_1:
           requires: 
                 - setup-dx-environment
           filters:
               branches:
                   only:
                   - /feature\/.*/
-      - feature-RunTestDistributed_2:
+      - feature-RunTestsDistributed_2:
             requires: 
                 - setup-dx-environment
             filters:
@@ -211,6 +211,8 @@ workflows:
       - finally: 
             requires: 
                 - setup-dx-environment
+                - feature-RunTestsDistributed_1
+                - feature-RunTestsDistributed_2
             filters:
                 branches:
                     only:
