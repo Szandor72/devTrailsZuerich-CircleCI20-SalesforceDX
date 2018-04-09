@@ -187,7 +187,7 @@ jobs:
                     name: delete all scratch orgs 
                     command: |
                         sfdx force:org:delete -u feature1 --no-prompt || true
-                        sfdx force:org:delete -u feature2 --no-prompt || true
+                        sfdx force:org:delete -u feature2 --no-prompt || true 
 
 workflows:
   version: 2
@@ -202,6 +202,13 @@ workflows:
                   only:
                   - /feature\/.*/
       - feature-RunTestDistributed_2:
+            requires: 
+                - setup-dx-environment
+            filters:
+                branches:
+                    only:
+                    - /feature\/.*/
+      - finally: 
             requires: 
                 - setup-dx-environment
             filters:
@@ -228,5 +235,6 @@ workflows:
             filters:
                 branches:
                     only:
-                    - master                    
+                    - master
+                            
             
