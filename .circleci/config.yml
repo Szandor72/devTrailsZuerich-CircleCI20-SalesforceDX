@@ -175,6 +175,19 @@ jobs:
                                             -u production \
                                             --testlevel NoTestRun \
                                             -w -1
+    finally:
+            machine: true 
+            steps: 
+                - attach_workspace:
+                    at: ~/
+                - run: 
+                    name: DX Install
+                    command: ~/tools/sfdx/install
+                - run: 
+                    name: delete all scratch orgs 
+                    command: |
+                        sfdx force:org:delete -u feature1 --no-prompt || true
+                        sfdx force:org:delete -u feature2 --no-prompt || true
 
 workflows:
   version: 2
